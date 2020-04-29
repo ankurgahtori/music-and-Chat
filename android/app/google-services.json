@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "529286025573",
+    "firebase_url": "https://musicandchat-42b69.firebaseio.com",
+    "project_id": "musicandchat-42b69",
+    "storage_bucket": "musicandchat-42b69.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529286025573:android:96b61ac5b410f7ed7b518c",
+        "android_client_info": {
+          "package_name": "com.musicandchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529286025573-lsnlfa1908v20i0h25j6remkl5a3qn29.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.musicandchat",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "529286025573-s2ibqb341pma9e9293h22eucsqskk968.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD5VDf97AzdPGALJPPb5aGY4dgP1MREAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529286025573-s2ibqb341pma9e9293h22eucsqskk968.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
