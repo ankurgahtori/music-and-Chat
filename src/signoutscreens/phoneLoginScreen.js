@@ -18,13 +18,12 @@ import {
 import {AuthContext} from '../Contexts/context';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import firestore from '@react-native-firebase/firestore';
 const PhoneSignIn = () => {
   const [confirm, setConfirm] = useState(null);
   const [code, setCode] = useState();
   const [number, setNumber] = useState('');
   const [sendingOTP, setSendingOTP] = useState(false);
-  const {signIn} = useContext(AuthContext);
   const [timeLeft, setTimeLeft] = useState(30);
   const [verifyingOTP, setVerifyingOTP] = useState(false);
   const [popUpVisibility, setPopUpVisibility] = useState(false);
@@ -32,7 +31,7 @@ const PhoneSignIn = () => {
   const startTimer = useCallback(() => {
     intervalRef.current = setInterval(() => {
       setTimeLeft(data =>
-        data > -1 ? data - 1 : clearInterval(intervalRef.current),
+        data > 0 ? data - 1 : clearInterval(intervalRef.current),
       );
     }, 1000);
   }, []);
@@ -53,12 +52,21 @@ const PhoneSignIn = () => {
 
   const confirmCode = useCallback(async () => {
     try {
-      let data = await confirm.confirm(code);
-      signIn(data);
+      let user = await confirm.confirm(code);
+      firestore()
+        .collection('Users')
+        .doc(user.phoneNumber)
+        .set({}, {merge: true})
+        .then(() => {
+          console.log('User added!');
+        })
+        .catch(err => {
+          console.log('Error on adding user', err);
+        });
     } catch (error) {
       setPopUpVisibility(true);
     }
-  }, [code, confirm, signIn]);
+  }, [code, confirm]);
 
   if (!confirm) {
     return (
@@ -121,7 +129,7 @@ const PhoneSignIn = () => {
                 setSendingOTP(true);
               }}>
               {sendingOTP ? (
-                <ActivityIndicator size={30} />
+                <ActivityIndicator size={50} />
               ) : (
                 <Icon
                   name={'forward'}
@@ -208,11 +216,15 @@ const PhoneSignIn = () => {
               setVerifyingOTP(true);
               confirmCode();
             }}>
-            <Icon
-              name="forward"
-              size={50}
-              color={code && !verifyingOTP ? '#1A4457' : 'gray'}
-            />
+            {verifyingOTP ? (
+              <ActivityIndicator size={50} />
+            ) : (
+              <Icon
+                name="forward"
+                size={50}
+                color={code && !verifyingOTP ? '#1A4457' : 'gray'}
+              />
+            )}
           </TouchableOpacity>
           <Text style={{fontSize: 20, color: '#1A4457', textAlign: 'center'}}>
             Login
