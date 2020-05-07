@@ -1,11 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
-} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -14,8 +8,9 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  Image,
+  StyleSheet,
 } from 'react-native';
-import {AuthContext} from '../Contexts/context';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
@@ -70,111 +65,51 @@ const PhoneSignIn = () => {
 
   if (!confirm) {
     return (
-      <>
-        <View style={{backgroundColor: '#1A4457', flex: 1}}>
-          <View
-            style={{
-              flex: 5,
-              backgroundColor: '#BFCED6',
-              borderTopRightRadius: 100,
-              borderBottomRightRadius: 300,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                backgroundColor: '#1A4457',
-                width: Dimensions.get('screen').width / 2,
-                height: Dimensions.get('screen').width / 2,
-                margin: 5,
-                borderRadius: Dimensions.get('screen').width / 4,
-              }}
-            />
-            <TextInput
-              style={{
-                textAlign: 'center',
-                backgroundColor: 'white',
-                width: Dimensions.get('screen').width / 2,
-                height: 30,
-                padding: 0,
-              }}
-              placeholder="10 Digit Mobile number"
-              onChangeText={text => {
-                setNumber(text);
-              }}
-            />
+      <View style={styles.container}>
+        <View style={styles.inputAndLogoPanel}>
+          <View style={styles.logo}>
+            <Image source={require('../../utils/logo.png')} />
           </View>
-          <View
-            style={{
-              flex: 2,
-              backgroundColor: '#476F86',
-              borderTopStartRadius: 600,
-              alignItems: 'center',
-              paddingTop: 10,
-            }}>
-            <TouchableOpacity
-              disabled={sendingOTP || number.length !== 10}
-              activeOpacity="0.1"
-              style={{
-                backgroundColor: '#BFCED6',
-                padding: 2,
-                width: 80,
-                borderRadius: 80 / 2,
-                height: 80,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => {
-                signInWithPhoneGivenNumber('+91' + number);
-                setSendingOTP(true);
-              }}>
-              {sendingOTP ? (
-                <ActivityIndicator size={50} />
-              ) : (
-                <Icon
-                  name={'forward'}
-                  size={50}
-                  color={
-                    number.length === 10 && !sendingOTP ? '#1A4457' : 'gray'
-                  }
-                />
-              )}
-            </TouchableOpacity>
-            <Text style={{fontSize: 20}}>Send OTP</Text>
-          </View>
+          <TextInput
+            style={styles.inputField}
+            placeholder="10 Digit Mobile number"
+            onChangeText={text => {
+              setNumber(text);
+            }}
+          />
         </View>
-      </>
+        <View style={styles.lowerContainer}>
+          <TouchableOpacity
+            disabled={sendingOTP || number.length !== 10}
+            style={styles.submitButton}
+            onPress={() => {
+              signInWithPhoneGivenNumber('+91' + number);
+              setSendingOTP(true);
+            }}>
+            {sendingOTP ? (
+              <ActivityIndicator size={50} />
+            ) : (
+              <Icon
+                name={'forward'}
+                size={50}
+                color={number.length === 10 && !sendingOTP ? '#1A4457' : 'gray'}
+              />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.buttonDesciption}>Send OTP</Text>
+        </View>
+      </View>
     );
   }
   return (
     <>
-      <View style={{backgroundColor: '#1A4457', flex: 1}}>
-        <View
-          style={{
-            flex: 5,
-            backgroundColor: '#BFCED6',
-            borderTopRightRadius: 100,
-            borderBottomRightRadius: 300,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              backgroundColor: '#1A4457',
-              width: Dimensions.get('screen').width / 2,
-              height: Dimensions.get('screen').width / 2,
-              margin: 5,
-              borderRadius: Dimensions.get('screen').width / 4,
-            }}
-          />
+      <View style={styles.container}>
+        <View style={styles.inputAndLogoPanel}>
+          <View style={styles.logo}>
+            <Image source={require('../../utils/logo.png')} />
+          </View>
           <TextInput
-            style={{
-              textAlign: 'center',
-              backgroundColor: 'white',
-              width: Dimensions.get('screen').width / 2,
-              height: 30,
-              padding: 0,
-            }}
+            style={styles.inputField}
             placeholder="Enter OTP"
             value={code}
             onChangeText={text => setCode(text)}
@@ -192,26 +127,11 @@ const PhoneSignIn = () => {
             </TouchableOpacity>
           )}
         </View>
-        <View
-          style={{
-            flex: 2,
-            backgroundColor: '#476F86',
-            borderTopStartRadius: 600,
-            alignItems: 'center',
-            paddingTop: 10,
-          }}>
+        <View style={styles.lowerContainer}>
           <TouchableOpacity
             disabled={!code || verifyingOTP}
-            activeOpacity="0.1"
-            style={{
-              backgroundColor: '#BFCED6',
-              padding: 2,
-              width: 80,
-              borderRadius: 80 / 2,
-              height: 80,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            // activeOpacity="0.1"
+            style={styles.submitButton}
             onPress={() => {
               setVerifyingOTP(true);
               confirmCode();
@@ -226,15 +146,9 @@ const PhoneSignIn = () => {
               />
             )}
           </TouchableOpacity>
-          <Text style={{fontSize: 20, color: '#1A4457', textAlign: 'center'}}>
-            Login
-          </Text>
+          <Text style={styles.buttonDesciption}>Login</Text>
           <TouchableOpacity
-            style={{
-              justifyContent: 'flex-end',
-              padding: 10,
-              backgroundColor: '#476F86',
-            }}
+            style={styles.changeNumberButton}
             onPress={() => {
               setConfirm();
               setSendingOTP(false);
@@ -255,17 +169,10 @@ const PhoneSignIn = () => {
           onRequestClose={() => {
             console.log('onRequestClose');
           }}>
-          <View
-            style={{
-              marginTop: Dimensions.get('window').height / 3,
-              height: Dimensions.get('window').height / 3,
-              width: Dimensions.get('window').height / 3,
-              backgroundColor: 'white',
-              alignSelf: 'center',
-            }}>
+          <View style={styles.modal}>
             <Icon
               name="close"
-              style={{alignSelf: 'flex-end'}}
+              style={styles.modalIcon}
               size={30}
               onPress={() => {
                 setPopUpVisibility(!popUpVisibility);
@@ -274,15 +181,8 @@ const PhoneSignIn = () => {
                 setVerifyingOTP(false);
               }}
             />
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{textAlign: 'center', fontSize: 30}}>
-                Invalid OTP
-              </Text>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>Invalid OTP</Text>
             </View>
           </View>
         </Modal>
@@ -291,3 +191,64 @@ const PhoneSignIn = () => {
   );
 };
 export default PhoneSignIn;
+const styles = StyleSheet.create({
+  container: {backgroundColor: '#1A4457', flex: 1},
+  logo: {
+    backgroundColor: '#1A4457',
+    width: Dimensions.get('screen').width / 2,
+    height: Dimensions.get('screen').width / 2,
+    margin: 5,
+    borderRadius: Dimensions.get('screen').width / 4,
+  },
+  inputAndLogoPanel: {
+    flex: 5,
+    backgroundColor: '#BFCED6',
+    borderTopRightRadius: 100,
+    borderBottomRightRadius: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputField: {
+    textAlign: 'center',
+    backgroundColor: 'white',
+    width: Dimensions.get('screen').width / 2,
+    height: 30,
+    padding: 0,
+  },
+  lowerContainer: {
+    flex: 2,
+    backgroundColor: '#476F86',
+    borderTopStartRadius: 600,
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+  submitButton: {
+    backgroundColor: '#BFCED6',
+    padding: 2,
+    width: 80,
+    borderRadius: 80 / 2,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonDesciption: {fontSize: 20, color: '#1A4457', textAlign: 'center'},
+  changeNumberButton: {
+    justifyContent: 'flex-end',
+    padding: 10,
+    backgroundColor: '#476F86',
+  },
+  modal: {
+    marginTop: Dimensions.get('window').height / 3,
+    height: Dimensions.get('window').height / 3,
+    width: Dimensions.get('window').height / 3,
+    backgroundColor: 'white',
+    alignSelf: 'center',
+  },
+  modalIcon: {alignSelf: 'flex-end'},
+  modalContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalText: {textAlign: 'center', fontSize: 30},
+});

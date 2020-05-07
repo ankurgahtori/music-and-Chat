@@ -16,6 +16,7 @@ const App = () => {
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(userInfo => {
       if (userInfo) {
+        console.log(userInfo);
         setUser(userInfo);
       } else {
         setUser();
